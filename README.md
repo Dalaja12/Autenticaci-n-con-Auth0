@@ -1,300 +1,202 @@
-# auth0 <a href='https:/curso-r.github.io/auth0'><img src='man/figures/logo.png' align="right" height="139" /></a>
+El objetivo de {auth0}es implementar un esquema de autenticación para Shiny usando OAuth Apps a través del servicio freemium Auth0 .
 
-[![Travis-CI Build Status](https://travis-ci.org/curso-r/auth0.svg?branch=master)](https://travis-ci.org/curso-r/auth0) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/curso-r/auth0?branch=master&svg=true)](https://ci.appveyor.com/project/curso-r/auth0) [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/auth0)](https://cran.r-project.org/package=auth0)
+Instalación
+Puede instalar {auth0}desde CRAN con:
 
-The goal of `{auth0}` is to implement an authentication scheme to Shiny using OAuth Apps through the freemium service [Auth0](https://auth0.com).
+install.packages ( " auth0 " )
+También puede instalar la versión de desarrollo de github con:
 
-## Installation
+# Install.packages ( "DevTools") 
+telecontroles :: install_github ( " curso-r / auth0 " )
+Tutorial
+Para crear su aplicación brillante autenticada, debe seguir los cinco pasos a continuación.
 
-You can install `{auth0}` from CRAN with:
-
-``` r
-install.packages("auth0")
-```
-
-You can also install the development version from github with:
-
-``` r
-# install.packages("devtools")
-remotes::install_github("curso-r/auth0")
-```
-
-## Tutorial
-
-To create your authenticated shiny app, you need to follow the five steps below.
-
-### Step 1: Create an Auth0 account
-
-- Go to [auth0.com](https://auth0.com)
-- Click "Sign Up"
-- You can create an account with a user name and password combination, or by signing up with your GitHub or Google accounts.
-
-### Step 2: Create an Auth0 application
-
-After logging into Auth0, you will see a page like this:
-
-<img src="man/figures/README-dash.png">
-
-- Click on "+ Create Application"
-- Give a name to your app
-- Select "Regular Web Applications" and click "Create"
-
-### Step 3: Configure your application
-
-- Go to the Settings in your selected application. You should see a page like this:
-
-<img src="man/figures/README-myapp.png">
-
-- Add `http://localhost:8080` to the "Allowed Callback URLs", "Allowed Web Origins" and "Allowed Logout URLs".
-    - You can change `http://localhost:8080` to another port.
-- Add the remote server where you are going to deploy your shiny app to the same boxes.
-    - Just make sure that these addresses are correct. If you are placing your app inside a folder (e.g. https://johndoe.shinyapps.io/fooBar), don't include the folder (`fooBar`) in "Allowed Web Origins".
-- Click "Save"
-
-Now let's go to R!
-
-### Step 4: Create your shiny app and fill the `_auth0.yml` file
-
-- Create a configuration file for your shiny app by calling `auth0::use_auth0()`:
-
-```r
-auth0::use_auth0()
-```
-
-- You can set the directory where this file will be created using the `path=` parameter. See `?auth0::use_auth0` for details.
-- Your `_auth0.yml` file should be like this:
+Paso 1: crea una cuenta Auth0
+Ir a auth0.com
+Haga clic en "Registrarse"
+Puede crear una cuenta con una combinación de nombre de usuario y contraseña, o registrándose con sus cuentas de GitHub o Google.
+Paso 2: crea una aplicación Auth0
+Después de iniciar sesión en Auth0, verá una página como esta:
 
 
-```yml
-name: myApp
-remote_url: ''
-auth0_config:
-  api_url: !expr paste0('https://', Sys.getenv("AUTH0_USER"), '.auth0.com')
-  credentials:
-    key: !expr Sys.getenv("AUTH0_KEY")
-    secret: !expr Sys.getenv("AUTH0_SECRET")
-```
 
-- Run `usethis::edit_r_environ()` and add these three environment variables:
+Haga clic en "+ Crear aplicación"
+Dale un nombre a tu aplicación
+Seleccione "Aplicaciones web normales" y haga clic en "Crear"
+Paso 3: configura tu aplicación
+Vaya a Configuración en su aplicación seleccionada. Debería ver una página como esta:
 
-```
+
+Agregue http://localhost:8080a las "URL de devolución de llamada permitidas", "Orígenes web permitidos" y "URL de cierre de sesión permitidas".
+Puede cambiar http://localhost:8080a otro puerto.
+Agregue el servidor remoto donde va a implementar su aplicación brillante en los mismos cuadros.
+Solo asegúrese de que estas direcciones sean correctas. Si está colocando su aplicación dentro de una carpeta (por ejemplo, https://johndoe.shinyapps.io/fooBar ), no incluya la carpeta ( fooBar) en "Orígenes web permitidos".
+Clic en Guardar"
+¡Ahora vayamos a R!
+
+Paso 4: crea tu aplicación brillante y llena el _auth0.ymlarchivo
+Cree un archivo de configuración para su aplicación brillante llamando a auth0::use_auth0():
+auth0 :: use_auth0 ()
+Puede establecer el directorio donde se creará este archivo utilizando el path=parámetro. Consulte ?auth0::use_auth0para obtener más detalles.
+Su _auth0.ymlarchivo debería ser así:
+Nombre : myApp 
+remote_url : ' '
+ auth0_config :
+   api_url : ! expr paste0 ( 'https: //', Sys.getenv ( "AUTH0_USER"), '.auth0.com') 
+  credenciales :
+     clave : ! expr Sys.getenv ( "AUTH0_KEY ") 
+    secreto : ! expr Sys.getenv (" AUTH0_SECRET ")
+Ejecute usethis::edit_r_environ()y agregue estas tres variables de entorno:
 AUTH0_USER=johndoe
 AUTH0_KEY=5wugt0W...
 AUTH0_SECRET=rcaJ0p8...
-```
+Así es como identifica a cada uno de ellos (vea la imagen a continuación):
 
-There's how you identify each of them (see the image below):
+AUTH0_USER es su nombre de usuario, que se encuentra en la esquina superior del sitio.
+AUTH0_KEY es su ID de cliente, que se puede copiar desde dentro de la página de la aplicación.
+AUTH0_SECRET es su secreto de cliente, que se puede copiar desde la página de la aplicación.
 
-- `AUTH0_USER` is your username, which can be found on the top corner of the site.
-- `AUTH0_KEY` is your Client ID, which can be copied from inside the app page.
-- `AUTH0_SECRET` is your Client Secret, which can be copied from the app page.
 
-<img src="man/figures/README-myapp-vars.png">
+Más sobre las variables de entorno aquí . También puede completar esta información directamente en el _auth0.ymlarchivo (ver más abajo). Si lo hace, no olvide guardar el _auth0.ymlarchivo después de editarlo.
 
-More about environment variables [here](https://csgillespie.github.io/efficientR/set-up.html#renviron). You can also fill these information directly in the `_auth0.yml` file (see below). If you do so, don't forget to save the `_auth0.yml` file after editing it.
+Guarde y reinicie su sesión .
+Escriba una aplicación brillante simple en un app.Rarchivo, como este:
+biblioteca ( brillante )
 
-- Save and **restart your session**.
-- Write a simple shiny app in a `app.R` file, like this:
-
-```r
-library(shiny)
-
-ui <- fluidPage(
-  fluidRow(plotOutput("plot"))
+ui  <- fluidPage (
+  fluidRow (plotOutput ( " plot " ))
 )
   
-server <- function(input, output, session) {
-  output$plot <- renderPlot({
-    plot(1:10)
+servidor  <-  función ( entrada , salida , sesión ) {
+   salida $ plot  <- renderPlot ({
+    plot ( 1 : 10 )
   })
 }
 
-# note that here we're using a different version of shinyApp!
-auth0::shinyAppAuth0(ui, server)
-```
+# ¡ Tenga en cuenta que aquí estamos usando una versión diferente de shinyApp! 
+auth0 :: shinyAppAuth0 ( ui , servidor )
+Nota : Si desea utilizar una ruta diferente al auth0archivo de configuración, puede pasarla shinyAppAuth0()o configurar la auth0_config_fileopción ejecutando options(auth0_config_file = "path/to/file").
 
-**Note**: If you want to use a different path to the `auth0` configuration file, you can either pass it to `shinyAppAuth0()` or set the `auth0_config_file` option by running `options(auth0_config_file = "path/to/file")`.
+Paso 5: ¡Corre!
+Puedes probar tu aplicación ejecutándose
 
-### Step 5: Run!
+opciones ( shiny.port  =  8080 )
+ shiny :: runApp ( " aplicación / directorio / " )
+Si todo está bien, debe ser reenviado a una página de inicio de sesión y, después de iniciar sesión o registrarse, será redirigido a su aplicación.
 
-You can try your app running
+Si está ejecutando su aplicación en un servidor remoto como shinyapps.io o su propio servidor, y si su aplicación está en una subcarpeta del host (como https://johndoe.shinyapps.io/fooBar ), debe incluir su control remoto URL en el remote_urlparámetro del _auth0.ymlarchivo.
 
-```r
-options(shiny.port = 8080)
-shiny::runApp("app/directory/")
-```
+También puede forzar el {auth0}uso de la configuración de URL local options(auth0_local = TRUE). Esto puede resultar útil si está ejecutando una aplicación dentro de un contenedor Docker.
 
-If everything is OK, you should be forwarded to a login page and, after logging in or signing up, you'll be redirected to your app.
+Variables de entorno y múltiples aplicaciones Auth0
+Si está usando {auth0}solo una aplicación brillante o está ejecutando muchas aplicaciones para la misma base de datos de usuario, el flujo de trabajo recomendado es usar las variables de entorno AUTH0_KEYy AUTH0_SECRET.
 
-If you are running your app in a remote server like shinyapps.io or your own server, and if your app is in a subfolder of the host (like https://johndoe.shinyapps.io/fooBar), you must include your remote URL in the `remote_url` parameter in the `_auth0.yml` file. 
+Sin embargo, si está ejecutando muchas aplicaciones brillantes y desea utilizar diferentes configuraciones de inicio de sesión, debe crear muchas aplicaciones Auth0. Por lo tanto, tendrá muchas ID de cliente y secretos de cliente para usar. En este caso, las variables de entorno global serán improductivas porque deberá cambiarlas cada vez que cambie la aplicación que está desarrollando.
 
-You can also force `{auth0}` to use the local URL setting `options(auth0_local = TRUE)`. This can useful if you're running an app inside a Docker container. 
+Hay dos opciones en este caso:
 
---------------------------------------------------------------------------------
+(Recomendado) Agregue variables de entorno dentro del repositorio de su aplicación, usando usethis::edit_r_environ("project").
+(No recomendado) Agregue el ID de cliente y el secreto directamente en el archivo _auth0.yml:
+La mejor opción en este caso es simplemente agregar el ID de cliente y el secreto directamente en el _auth0.ymlarchivo:
 
-## Environment variables and multiple Auth0 apps
+name : myApp 
+remote_url : ' '
+ auth0_config :
+   api_url : https: // <USERNAME> .auth0.com 
+  credenciales :
+     clave : <CLIENT_ID> 
+    secreto : <CLIENT_SECRET>
+Ejemplo:
 
-If you are using `{auth0}` for just one shiny app or you are running many apps for the same user database, the recommended workflow is using the environment variables `AUTH0_KEY` and `AUTH0_SECRET`.
+name : myApp 
+remote_url : ' '
+ auth0_config :
+   api_url : https://johndoe.auth0.com 
+  credenciales :
+     clave : cetQp0e7bdTNGrkrHpuF8gObMVl8vu 
+    secreto : C6GHFa22mfliojqPyKP_5K0ml4TituWr6-If
+Aunque es posible, la última opción es menos segura y, por lo tanto, no se recomienda porque es fácil olvidar las contraseñas allí y enviarlas a repositorios públicos, por ejemplo.
 
-However, if you are running many shiny apps and want to use different login settings, you must create many Auth0 apps. Hence, you'll have many Cliend IDs and Client Secrets to use. n this case, global environment variables will be unproductive because you'll need to change them every time you change the app you are developing.
+ui.R/server.R
+Para que {auth0}funcione con un marco ui.R/ server.R, deberá ajustar su uiobjeto / función con auth0_ui()y su serverfunción con auth0_server(). Aquí hay un pequeño ejemplo de trabajo:
 
-There are two options in this case:
+ui.R
+biblioteca ( brillante )
+biblioteca ( auth0 )
 
-- (Recommended) Add environment variables inside the repository of your application, using `usethis::edit_r_environ("project")`.
-- (Not recommended) Add the Client ID and Secret directly in the _auth0.yml file:
+auth0_ui (fluidPage (logoutButton ()))
+servidor.R
+biblioteca ( auth0 )
 
-The best option in this case is to simply add the Client ID and Secret directly in the `_auth0.yml` file:
+auth0_server ( función ( entrada , salida , sesión ) {})
+{auth0}intentará encontrar el _auth0.ymlutilizando la misma estrategia que el app.Rmarco: primero desde options(auth0_config_file = "path/to/file")y luego arreglando "./_auth0.yml". Ambos auth0_ui()y auth0_server()tienen un info=parámetro donde puede pasar la ruta del _auth0.ymlarchivo o el objeto devuelto por la auth0_info()función.
 
-```yml
-name: myApp
-remote_url: ''
-auth0_config:
-  api_url: https://<USERNAME>.auth0.com
-  credentials:
-    key: <CLIENT_ID>
-    secret: <CLIENT_SECRET>
-```
+Parámetro de audiencia
+Para autorizar a un cliente a realizar llamadas a la API contra un servidor remoto, la solicitud de autorización debe incluir un audienceparámetro ( documentación de Auth0 ).
 
-Example:
+Para hacer esto {auth0}, agregue un audienceparámetro a la auth0_config sección de su _auth0.ymlarchivo. Por ejemplo:
 
-```yml
-name: myApp
-remote_url: ''
-auth0_config:
-  api_url: https://johndoe.auth0.com
-  credentials:
-    key: cetQp0e7bdTNGrkrHpuF8gObMVl8vu
-    secret: C6GHFa22mfliojqPyKP_5K0ml4TituWrOhYvLdTa7veIyEU3Q10R_-If-7Sh6Tc
-```
+Nombre : myApp 
+remote_url : ' '
+ auth0_config :
+   api_url : ! expr paste0 ( 'https: //', Sys.getenv ( "AUTH0_USER"), '.auth0.com') 
+  de la audiencia : https://example.com/api 
+  credenciales :
+     clave : ! expr Sys.getenv ( "AUTH0_KEY") 
+    secreto : ! expr Sys.getenv ( "AUTH0_SECRET")
+Cuando audiencese incluye un parámetro en la solicitud, el token de acceso devuelto por Auth0 será un token de acceso JWT en lugar de un token de acceso opaco. El cliente debe incluir el token de acceso con las solicitudes de API para autenticar las solicitudes.
 
-Although possible, the latter option is less secure and consequently not recommended because it's easy to forget passwords there and commit them in public repositories, for example.
+Limitaciones de RStudio
+Debido a que RStudio está especializado en aplicaciones brillantes estándar, algunas funciones no funcionan como se esperaba cuando se usan {auth0}. Los principales problemas son que debe ejecutar la aplicación en un navegador real, como Chrome o Firefox. Si usa RStudio Viewer o ejecuta la aplicación en una ventana de RStudio, la aplicación mostrará una página en blanco y no funcionará.
 
---------------------------------------------------------------------------------
+Si está utilizando una versión inferior a 1.2 en RStudio, es posible que el botón "Ejecutar aplicación" no aparezca en la esquina derecha del script app.R. Eso es porque RStudio busca el término "shinyApp (" en el código para identificar una aplicación brillante.
 
-## `ui.R`/`server.R`
+Marcadores
+Desde v0.2.0, auth0admite marcadores de estado de shiny, pero debido a problemas de análisis de URL, los marcadores solo funcionan con el almacenamiento del servidor. Para activar esta función, debe llamar a la aplicación con las siguientes líneas en su app.Rarchivo:
 
-To make `{auth0}` work using an `ui.R`/`server.R` framework, you'll need to wrap your `ui` object/function with `auth0_ui()` and your `server` function with `auth0_server()`. Here's a small working example:
+enableBookmarking ( tienda  =  " servidor " )
+shinyAppAuth0 ( interfaz de usuario , servidor )
+También tenga en cuenta que Auth0 agrega codey statea los parámetros de consulta de URL.
 
-### ui.R
+Esta solución funciona normalmente en ui.R/ server.Rframework.
 
-```r
-library(shiny)
-library(auth0)
+Gestionar usuarios
+Puede administrar el acceso de los usuarios desde el panel Usuarios en Auth0. Para crear un usuario, haga clic en "+ Crear usuarios".
 
-auth0_ui(fluidPage(logoutButton()))
-```
+También puede utilizar muchos proveedores de OAuth diferentes como Google, Facebook, Github, etc. Para configurarlos, vaya a la pestaña Conexiones .
 
-### server.R
+En un futuro cercano, nuestro plan es implementar la API de Auth0 en R para que pueda administrar su aplicación usando R.
 
-```r
-library(auth0)
+Información registrada
+Después de que un usuario inicia sesión, es posible acceder a la información del usuario actual utilizando el session$userData$auth0_infoobjeto reactivo. Se puede acceder al token Auth0 usando session$userData$auth0_credentials. He aquí un pequeño ejemplo:
 
-auth0_server(function(input, output, session) {})
-```
+biblioteca ( brillante )
+biblioteca ( auth0 )
 
-`{auth0}` will try to find the `_auth0.yml` using the same strategy than the `app.R` framework: first from `options(auth0_config_file = "path/to/file")` and then fixing `"./_auth0.yml"`. Both `auth0_ui()` and `auth0_server()` have a `info=` parameter where you can pass either the path of the `_auth0.yml` file or the object returned by `auth0_info()` function.
-
-
-
---------------------------------------------------------------------------------
-
-## Audience parameter
-
-To authorize a client to make API calls against a remote server, the authorization request should include an `audience` parameter 
-([Auth0 documentation](https://auth0.com/docs/flows/guides/auth-code/call-api-auth-code#example-authorization-url)).
-
-To do this with `{auth0}`, add an `audience` parameter to the `auth0_config`
-section of your `_auth0.yml` file. For example:
-
-```yml
-name: myApp
-remote_url: ''
-auth0_config:
-  api_url: !expr paste0('https://', Sys.getenv("AUTH0_USER"), '.auth0.com')
-  audience: https://example.com/api
-  credentials:
-    key: !expr Sys.getenv("AUTH0_KEY")
-    secret: !expr Sys.getenv("AUTH0_SECRET")
-```
-
-When an `audience` parameter is included in the request, the 
-[access token](https://auth0.com/docs/tokens)
-returned by Auth0 will be a JWT access token rather than an opaque access token.
-The client must include the access token with API requests to authenticate
-the requests.
-
---------------------------------------------------------------------------------
-
-## RStudio limitations
-
-Because RStudio is specialized in standard shiny apps, some features do not work as expected when using `{auth0}`. The main issues are is that you must run the app in a real browser, like Chrome or Firefox. If you use the RStudio Viewer or run the app in a RStudio window, the app will show a blank page and won't work.
-
-If you're using a version lower than 1.2 in RStudio, the "Run App" button may not appear in the right corner of the app.R script. That's because RStudio searches for the "shinyApp(" term in the code to identify a shiny app.
-
---------------------------------------------------------------------------------
-
-## Bookmarking
-
-Since v0.2.0, `auth0` supports shiny's state bookmarking, but because of URL parsing issues, bookmarking only works with server storage. To activate this feature, you must call the app with the following lines in your `app.R` file:
-
-```r
-enableBookmarking(store = "server")
-shinyAppAuth0(ui, server)
-```
-
-Also note that Auth0 adds `code` and `state` to the URL query parameters. 
-
-This solution works normally in the `ui.R`/`server.R` framework.
-
---------------------------------------------------------------------------------
-
-## Managing users
-
-You can manage user access from the Users panel in Auth0. To create a user, click on "+ Create users".
-
-You can also use many different OAuth providers like Google, Facebook, Github etc. To configure them, go to the *Connections* tab. 
-
-In the near future, our plan is to implement Auth0's API in R so that you can manage your app using R.
-
---------------------------------------------------------------------------------
-
-## Logged information
-
-After a user logs in, it's possible to access the current user's information using the `session$userData$auth0_info` reactive object. The Auth0 token
-can be accessed using `session$userData$auth0_credentials`. 
-Here is a small example:
-
-```r
-library(shiny)
-library(auth0)
-
-# simple UI with user info
-ui <- fluidPage(
-  verbatimTextOutput("user_info")
-  verbatimTextOutput("credential_info")
+# UI simple con información de usuario 
+ui  <- fluidPage (
+  verbatimTextOutput ( " user_info " )
+  verbatimTextOutput ( " credential_info " )
 )
 
-server <- function(input, output, session) {
+servidor  <-  función ( entrada , salida , sesión ) {
 
-  # print user info
-  output$user_info <- renderPrint({
-    session$userData$auth0_info
+  # imprimir información de usuario 
+  salida $ user_info  <- renderPrint ({
+     sesión $ userData $ auth0_info
   })
   
-  output$credential_info <- renderPrint({
-    session$userData$auth0_credentials
+  salida $ credential_info  <- renderPrint ({
+     sesión $ userData $ auth0_credentials
   })
 
 }
 
-shinyAppAuth0(ui, server)
-```
+shinyAppAuth0 ( interfaz de usuario , servidor )
+Debería ver los objetos que contienen la información de usuario y credencial.
 
-You should see objects containing the user and credential info.
+Información de usuario
 
-**User info**
-
-```
 $sub
 [1] "auth0|5c06a3aa119c392e85234f"
 
@@ -309,13 +211,10 @@ $picture
 
 $updated_at
 [1] "2019-02-13T10:33:06.141Z"
-```
+Tenga en cuenta que el subcampo es único y se puede utilizar para muchos propósitos, como crear aplicaciones personalizadas para diferentes usuarios.
 
-Note that the `sub` field is unique and can be used for many purposes, like creating customized apps for different users.
+Información de la credencial (abreviada)
 
-**Credential info (abridged)**
-
-```
 $access_token
 [1] "y5Yv..."
 
@@ -330,94 +229,56 @@ $expires_in
 
 $token_type
 [1] "Bearer"
-```
+Se id_tokenpuede usar con aplicaciones que requieren un Authorization encabezado con cada solicitud web.
 
-The `id_token` may be used with applications that require an `Authorization`
-header with each web request.
+Información registrada y ui.R / server.R
+Si está ejecutando {auth0}utilizando ui.R/server.Rframework y desea acceder a la información registrada, deberá usar la misma auth0_info()función de objeto devuelto en ambos auth0_ui()y auth0_server().
 
-### Logged information and ui.R/server.R
+Esto es posible usando el global.Rarchivo. Por ejemplo:
 
-If you're running `{auth0}` using `ui.R/server.R` framework and you want to access logged information, you'll need to use the same object returned `auth0_info()` function in both `auth0_ui()` and `auth0_server()`.
+global.R
+a0_info  <-  auth0 :: auth0_info ()
+ui.R
+biblioteca ( brillante )
+biblioteca ( auth0 )
 
-This is possible using the `global.R` file. For example:
+auth0_ui (fluidPage (), info  =  a0_info )
+servidor.R
+biblioteca ( auth0 )
 
-#### global.R
+auth0_server ( función ( entrada , salida , sesión ) {
 
-```r
-a0_info <- auth0::auth0_info()
-```
-
-#### ui.R
-
-```r
-library(shiny)
-library(auth0)
-
-auth0_ui(fluidPage(), info = a0_info)
-```
-
-#### server.R
-
-```r
-library(auth0)
-
-auth0_server(function(input, output, session) {
-
-  observe({ 
-    print(session$userData$auth0_info) 
+  observar({ 
+    imprimir ( sesión $ userData $ auth0_info )
   })
   
-}, info = a0_info)
-```
+}, info  =  a0_info )
+Cerrar sesión
+Puede agregar un botón de cierre de sesión a su aplicación usando logoutButton().
 
---------------------------------------------------------------------------------
+biblioteca ( brillante )
+biblioteca ( auth0 )
 
-## Logout
+# UI simple con botón de cierre de sesión 
+ui  <- fluidPage (logoutButton ())
+ server  <-  function ( input , output , session ) {}
+shinyAppAuth0 ( interfaz de usuario , servidor )
+Costos
+Auth0 es un servicio freemium. La cuenta gratuita le permite tener hasta 7000 conexiones en un mes y dos tipos de conexiones sociales. Puedes consultar todos los planos aquí .
 
-You can add a logout button to your app using `logoutButton()`.
+Descargo de responsabilidad
+Este paquete no es proporcionado ni respaldado por Auth0 Inc. Úselo bajo su propio riesgo.
 
-```r
-library(shiny)
-library(auth0)
+Además, NO soy un experto en seguridad y, como señaló Bob Rudis , agregar la palabra "seguro" a algo tiene amplias implicaciones de eficacia e integridad. Entonces, este paquete puede estar mintiendo cuando dice que es seguro.
 
-# simple UI with logout button
-ui <- fluidPage(logoutButton())
-server <- function(input, output, session) {}
-shinyAppAuth0(ui, server)
-```
+Si es un experto en seguridad y le gustó la idea de este paquete, considere probarlo. Estaremos muy, muy agradecidos por cualquier ayuda.
 
---------------------------------------------------------------------------------
-
-## Costs
-
-Auth0 is a freemium service. The free account lets you have up to 7000 connections in one month and two types of social connections. You can check all the plans [here](https://auth0.com/pricing).
-
-## Disclaimer
-
-This package is not provided nor endorsed by Auth0 Inc. Use it at your own risk.
-
-Also, I am NOT a security expert, and as [Bob Rudis pointed out](https://twitter.com/hrbrmstr/status/1175924379412307970), adding the word "secure" on something has broad implications of efficacy and completeness. So this package may be lying when it tells it's secure. 
-
-If you're a security expert and liked the idea of this package, please consider testing it. We'll be really, really grateful for any help.
-
---------------------------------------------------------------------------------
-
-## Roadmap
-
-### `{auth0}` 0.2.0
-
-- [✔] Remove the need for local and remote URLs in the `config_file`.
-- [✔] Solve bookmarking and URL parameters issue (Issue #22).
-- [✔] `shinyAppDirAuth0()` function to work as `shiny::shinyAppDir()` (Issue #21).
-- [✔] Support to `ui.R`/`server.R` apps.
-
-### `{auth0}` 0.3.0
-
-- [ ] Implement `{auth0}` API functions to manage users and login options throusgh R.
-- [✔] Hex sticker.
-
---------------------------------------------------------------------------------
-
-## Licence
-
-MIT
+Mapa vial
+{auth0} 0.2.0
+[heavy_check_mark] Elimina la necesidad de direcciones URL locales y remotas en el config_file.
+[heavy_check_mark] Resuelva el problema de los marcadores y los parámetros de URL (Problema # 22).
+[heavy_check_mark] shinyAppDirAuth0()función para funcionar como shiny::shinyAppDir()(Problema # 21).
+[heavy_check_mark] Soporte para ui.R/ server.Rapps.
+{auth0} 0.3.0
+Implemente {auth0}funciones de API para administrar usuarios y opciones de inicio de sesión a través de R.
+[heavy_check_mark] Pegatina hexagonal.
